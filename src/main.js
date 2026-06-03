@@ -1,4 +1,4 @@
-import iziToast from "izitoast";
+import izitoast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 import SimpleLightbox from "simplelightbox";
@@ -32,7 +32,7 @@ async function handleSearch(event) {
     const searchWord = event.currentTarget.elements.searchQuery.value.trim();
 
     if (searchWord === "") {
-        iziToast.warning({
+        izitoast.warning({
             title: "Uyarı",
             message: "Lütfen bir arama terimi girin!",
             position: "topRight"
@@ -51,7 +51,7 @@ async function handleSearch(event) {
         const data = await fetchImages(query, page);
 
         if (data.hits.length === 0) {
-            iziToast.error({
+            izitoast.error({
                 message: "Sorry, there are no images matching your search query. Please try again!",
                 position: "topRight"
             });
@@ -66,7 +66,7 @@ async function handleSearch(event) {
         // Koleksiyon sonu kontrolü
         if (data.totalHits <= page * perPage) {
             loadMoreBtn.classList.add("hidden"); 
-            iziToast.info({
+            izitoast.info({
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight"
             });
@@ -76,7 +76,7 @@ async function handleSearch(event) {
 
     } catch (error) {
         console.error(error);
-        iziToast.error({
+        izitoast.error({
             title: "Hata",
             message: "Bir şeyler ters gitti, lütfen daha sonra tekrar deneyin.",
             position: "topRight"
@@ -123,7 +123,7 @@ async function handleLoadMore() {
         // Koleksiyon sonu kontrolü
         if (page * perPage >= data.totalHits) {
             loadMoreBtn.classList.add("hidden"); 
-            iziToast.info({
+            izitoast.info({
                 message: "We're sorry, but you've reached the end of search results.",
                 position: "topRight"
             });
@@ -133,7 +133,7 @@ async function handleLoadMore() {
 
     } catch (error) {
         console.error(error);
-        iziToast.error({
+        izitoast.error({
             title: "Hata",
             message: "Yeni resimler yüklenirken bir hata oluştu.",
             position: "topRight"
