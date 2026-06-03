@@ -4,9 +4,9 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-
 import { fetchImages } from "./js/pixabay-api.js"; 
-import { createGalleryMarkup } from "./js/render-functions.js";
+// Doğru fonksiyon adını import ediyoruz:
+import { renderGallery } from "./js/render-functions.js";
 
 const form = document.querySelector("#search-form");
 const gallery = document.querySelector("#gallery");
@@ -58,8 +58,8 @@ async function handleSearch(event) {
             return;
         }
 
-        const markup = createGalleryMarkup(data.hits);
-        gallery.innerHTML = markup;
+        // renderGallery hem datayı alır hem de doğrudan 'gallery' elementine yazdırır:
+        renderGallery(data.hits, gallery);
 
         lightbox.refresh();
 
@@ -97,16 +97,13 @@ async function handleLoadMore() {
     try {
         const data = await fetchImages(query, page);
 
-        const markup = createGalleryMarkup(data.hits);
-        gallery.insertAdjacentHTML("beforeend", markup);
+        // renderGallery fonksiyonunuz kendi içinde 'beforeend' kullandığı için 
+        // eski resimleri silmeden altına eklemeye devam edecektir:
+        renderGallery(data.hits, gallery);
 
         lightbox.refresh();
 
-        // -----------------------------------------------------------------
-        // --- OTOMATİK DÜZGÜN KAYDIRMA (Burayı yeni ekledik) ---
-        // -----------------------------------------------------------------
-        // NOT: Eğer render-functions.js içinde kartlara verdiğin class adı 
-        // "gallery-item" değilse, aşağıdaki tırnak içindeki ismi ona göre değiştir!
+        // --- OTOMATİK DÜZGÜN KAYDIRMA ---
         const galleryItem = document.querySelector(".gallery-item"); 
         
         if (galleryItem) {
@@ -114,11 +111,10 @@ async function handleLoadMore() {
             const cardHeight = rect.height; 
 
             window.scrollBy({
-                top: cardHeight * 2, // Sayfayı 2 kart boyutu aşağı kaydırır
-                behavior: "smooth"  // Yumuşak kaydırma efekti verir
+                top: cardHeight * 2, 
+                behavior: "smooth"  
             });
         }
-        // -----------------------------------------------------------------
 
         // Koleksiyon sonu kontrolü
         if (page * perPage >= data.totalHits) {
